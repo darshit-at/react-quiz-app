@@ -1,0 +1,14 @@
+.question {
+    background-color:white ;
+   max-width: 600px;
+    text-align: center;
+    min-width: 200px;
+    color: black;
+    padding: 7px 20px;
+    border-radius: 20px;
+
+}
+.question-control {
+text-align: center;
+
+}
