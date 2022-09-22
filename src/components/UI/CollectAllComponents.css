@@ -1,0 +1,7 @@
+.quiz-components {
+    background-color: rgb(137, 137, 137);
+    width: 500px;
+    min-height: 280px;
+
+    border-radius: 16px;
+}

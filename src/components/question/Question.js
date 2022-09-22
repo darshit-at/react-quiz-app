@@ -4,15 +4,12 @@ import "./question.css";
 
 const Question = () => {
   const currentQuestion = useSelector((state) => state.questionOption.currentQuestion);
-  console.log(currentQuestion)
 
   return (
     <div className="question-control">
       <div className="question">
-        <div>
-          {currentQuestion === "" && <div>Loading...</div>}
-          {currentQuestion !==""  && 
-            <div>{currentQuestion}</div>}
+        <div>     
+  <div dangerouslySetInnerHTML={{__html : currentQuestion }}></div>
         </div>
       </div>
     </div>

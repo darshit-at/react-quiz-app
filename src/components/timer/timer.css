@@ -1,0 +1,6 @@
+.timer {
+    display: flex;
+    justify-content: space-between;
+    margin: 0px 20px;
+    font-size: 14px;
+}

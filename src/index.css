@@ -13,9 +13,12 @@ code {
 }
 
 body {
-  color: white;
- overflow: hidden;
+
+ overflow-x: hidden;
   width: 100vw;
   height: 100vh;
+
+  font-family: 'Roboto', sans-serif;
+  font-style:SemiBold 600 Italic;
   background: rgb(34, 35, 36);
 }

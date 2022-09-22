@@ -1,49 +1,70 @@
-import React, { useState, useRef } from "react";
+import React, { useEffect, useState } from "react";
+import {  useSelector } from "react-redux";
 import Button from "../../layout/Button";
+import Input from "../../layout/Input";
 
 const QuestionOptionList = (props) => {
-  const userSeleteOption = useRef("");
+  const timer = useSelector((state) => state.timer.sec);
+  const setRandomOption = useSelector((state) => state.randomSelete.setRandomValue);
+  const [userSeleteOption, getUserSeleteOption] = useState("");
+  const [showNextQuestionBtn, setShowQuestionbtn] = useState(false);
+  const [options] = props.questionOption;
 
-    const [options] = props.questionOption;
+  useEffect(() => {
+    if (timer === 1 && userSeleteOption === "") {
+      localStorage.setItem("blankSeleteOption", userSeleteOption);
+    }
+    if(setRandomOption!==''){
+      getUserSeleteOption(setRandomOption)
+    }
+
+  }, [timer, userSeleteOption,setRandomOption]);
 
   const showUserSeleteOption = (event) => {
-    if(props.btndisabled) {
+    if (props.btndisabled) {
       const optionValue = event.target.textContent;
-      userSeleteOption.current.value = optionValue;
+      getUserSeleteOption(optionValue);
+      localStorage.setItem("blankSeleteOption" , optionValue)
     }
-  
   };
 
   const handlerSubmit = () => {
-    props.onSubmit(userSeleteOption.current.value)
-  }
+
+    setShowQuestionbtn(true);
+    props.onSubmit(userSeleteOption);
+    props.onStopTimer("stop");
+  };
+
+  const getUserInput = (input) => {
+    getUserSeleteOption(input);
+  };
 
   return (
     <div className="option-control">
       <div className="upper-option">
-        <span onClick={showUserSeleteOption}>{options[0]}</span>
-        <span onClick={showUserSeleteOption}>{options[1]}</span>
-        {options.length > 2 && (
-          <>
-            <span onClick={showUserSeleteOption}>{options[2]}</span>
-            <span onClick={showUserSeleteOption}>{options[3]}</span>
-          </>
-        )}
+        {options.length > 0 &&
+          options.map((option, index) => {
+            return (
+              <span
+                dangerouslySetInnerHTML={{ __html: option }}
+                onClick={showUserSeleteOption}
+                key={`option${index}`}
+              ></span>
+            );
+          })}
       </div>
-
+      <div className="input">
+        <Input onChange={getUserInput} userSeleteOption={userSeleteOption} />
+      </div>
       <div className="button">
-        <input
-          type="text"
-          placeholder="Your selete option "
-          defaultValue={userSeleteOption.current.value}
-          ref={userSeleteOption}
-        />
         <Button onClick={handlerSubmit} disabled={!props.btndisabled}>
           Submit
         </Button>
-        <Button disabled={props.btndisabled} onClick={props.onNextQuestion}>
-          Next Question
-        </Button>
+        {showNextQuestionBtn && (
+          <Button disabled={props.btndisabled} onClick={props.onNextQuestion}>
+            Next Question
+          </Button>
+        )}
       </div>
     </div>
   );

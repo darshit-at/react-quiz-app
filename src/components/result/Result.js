@@ -13,4 +13,4 @@ const Result = () => {
     </div>
  )
 };
-export default Result;
+export default React.memo(Result);
