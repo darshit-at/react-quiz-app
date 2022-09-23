@@ -4,7 +4,7 @@ import swal from "sweetalert";
 import { useDispatch, useSelector } from "react-redux";
 import "./questionOption.css";
 import { questionAction } from "../../redux/questionoption-slice";
-import { correctAnswerAction } from "../../redux/check-answer-slice";
+import { correctAnswerAction } from "../../redux/check-answer-add-points-slice";
 import QuestionOptionList from "./QuestionOptionList";
 
 const Questionoption = (props) => {
@@ -15,19 +15,18 @@ const Questionoption = (props) => {
     (state) => state.questionOption.questionOption
   );
 
-
   const similarFunctility = () => {
     dispatch(fetchQuestion());
     dispatch(questionAction.removePreviewOption());
     dispatch(correctAnswerAction.removeResultMessageAfterSubmit());
   };
 
-  const checkAnswerSubmit = (userSeleteOption) => {
-    if (userSeleteOption.trim().length === 0) {
-      swal("please selete any option");
+  const checkAnswerSubmit = (userSelectOption) => {
+    if (userSelectOption.trim().length === 0) {
+      swal("Please selete any option");
     } else {
       setbtndisabled(false);
-      dispatch(correctAnswerAction.checkAnswer(userSeleteOption));
+      dispatch(correctAnswerAction.checkAnswer(userSelectOption));
     }
   };
 

@@ -1,8 +1,8 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import "./timer.css";
-import { correctAnswerAction } from "../../redux/check-answer-slice";
-import { questionAction } from "../../redux/questionoption-slice";
+
+
 const Timer = () => {
   const timer = useSelector((state) => state.timer.sec);
   const questionOption = useSelector(

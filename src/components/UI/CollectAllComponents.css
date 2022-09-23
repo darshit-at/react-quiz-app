@@ -1,7 +1,24 @@
 .quiz-components {
-    background-color: rgb(137, 137, 137);
-    width: 500px;
-    min-height: 280px;
-
+    background-color: lightgrey;
+    min-width: 500px;
+    min-height: 320px;
+max-width: 600px;
     border-radius: 16px;
+}
+
+@media screen and (max-width:545px) {
+   body {
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+   }
+    .quiz-components {
+
+margin: 0px 20px;
+   font-size: 16px;
+min-height: 430px;   
+min-width: 370px;
+    }
 }

@@ -8,8 +8,9 @@ import Timer from "../timer/Timer";
 import { questionAction } from "../../redux/questionoption-slice";
 import { fetchQuestion } from "../../redux/fetch-api-slice";
 import { timerAction } from "../../redux/set-timer-slice";
-import { correctAnswerAction } from "../../redux/check-answer-slice";
-import { randomSeleteAction } from "../../redux/random-selete-option";
+import { correctAnswerAction } from "../../redux/check-answer-add-points-slice";
+import { randomSelectAction } from "../../redux/random-select-option";
+import Score from "../score/score";
 
 const CollectAllCompoenents = () => {
   const [stopTimer, setStopTimer] = useState("");
@@ -26,45 +27,51 @@ const CollectAllCompoenents = () => {
   const questionOption = useSelector(
     (state) => state.questionOption.questionOption
   );
-
+  const clickOnFinishBtn = useSelector(
+    (state) => state.displayScore.isUserClickOnFinish
+  );
   const timer = useSelector((state) => state.timer.sec);
 
   useEffect(() => {
-    const blankOption = localStorage.getItem("blankSeleteOption");
+    const blankOption = localStorage.getItem("blankSelectOption");
     let clear = setInterval(() => {
       dispatch(timerAction.decreaseSecond());
+      //for fetch data after timer is end and sent request after select any  random option if user not select any option
       if (timer === 1) {
-        dispatch(fetchQuestion());
-        dispatch(correctAnswerAction.removeResultMessageAfterSubmit());
-        dispatch(randomSeleteAction.setAnyValue(''))
-        setTimeout(() => {}, 500);
+        setTimeout(() => {
+          dispatch(fetchQuestion());
+          dispatch(correctAnswerAction.removeResultMessageAfterSubmit());
+          dispatch(questionAction.removePreviewOption());
+          dispatch(randomSelectAction.setAnyValue(""));
+        }, 300);
       }
-
+      //for select randon option when user not selwtw anything
       if (timer === 1 && blankOption === "") {
-        console.log("blank run condition is load first");
-        const randomOption = questionOption[Math.floor(Math.random() * questionOption.length)];
-        dispatch(correctAnswerAction.checkAnswer(randomOption[1]));
-        dispatch(randomSeleteAction.setAnyValue(randomOption[1]))
-        dispatch(questionAction.removePreviewOption());
+        questionOption.sort();
+        const [randomElement] = questionOption;
+        dispatch(correctAnswerAction.checkAnswer(randomElement[1]));
+        dispatch(randomSelectAction.setAnyValue(randomElement[1]));
       }
     }, 1000);
-
+    //stop interval on submit btn
     if (stopTimer === "stop") {
-      console.log(startTimer);
       clearInterval(clear);
+      setStartTimer("");
     }
-
+    //start interval on next  btn
     if (startTimer === "start") {
-      setStopTimer(" ");
+      setStopTimer("");
     }
     return () => {
       clearInterval(clear);
+      // clearTimeout(clearTimeOut);
     };
   }, [dispatch, timer, startTimer, stopTimer, questionOption]);
 
   const stopTimerHandler = (stop) => {
     setStopTimer(stop);
   };
+
   const startTimerHandler = (start) => {
     dispatch(timerAction.decreaseSecond("restart"));
     setStartTimer(start);
@@ -74,17 +81,23 @@ const CollectAllCompoenents = () => {
       {currentQuestion === "" || questionOption.length === 0 ? (
         <h4 style={{ color: "black", textAlign: "center" }}>Loading...</h4>
       ) : (
-        <Fragment>
-          <Timer />
-          <Question />
-          <Questionoption
-            onStopTimer={stopTimerHandler}
-            onStartTimer={startTimerHandler}
-          />
-        </Fragment>
+        ""
       )}
+      {currentQuestion !== "" &&
+        questionOption.length > 0 &&
+        !clickOnFinishBtn && (
+          <Fragment>
+            <Timer />
+            <Question />
+            <Questionoption
+              onStopTimer={stopTimerHandler}
+              onStartTimer={startTimerHandler}
+            />
+          </Fragment>
+        )}
 
       {showResultMessage && <Result />}
+      {clickOnFinishBtn && <Score onStartTimer={startTimerHandler} />}
     </div>
   );
 };

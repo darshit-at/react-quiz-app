@@ -1,15 +1,19 @@
 .App {
 
   margin-top: 100px;
-  display: flex;
-
-  flex-direction: column;
-  align-items:center;
+ 
 }
 
 .App-logo {
   height: 40vmin;
   pointer-events: none;
+}
+@media screen and (max-width:545px) {
+  body {
+    font-family: 'Noto Sans', sans-serif;
+
+    font-style: Regular 400;
+  }
 }
 
 @media (prefers-reduced-motion: no-preference) {

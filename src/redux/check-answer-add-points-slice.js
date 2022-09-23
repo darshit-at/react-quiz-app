@@ -5,7 +5,8 @@ const initalState = {
   answer: "",
   isAnswerCorrect: true,
   point: 0,
-
+  correctAnswer :0,
+  wrongAnswer : 0
 };
 const checkCorrectAnswerSlice = createSlice({
   name: "checkanswer",
@@ -24,17 +25,25 @@ const checkCorrectAnswerSlice = createSlice({
         state.showResultMessage = true;
         state.isAnswerCorrect = true;
         state.point += 5;
+        state.correctAnswer +=1
       } else {
         state.result = "Your answer is not correct";
         state.showResultMessage = true;
         state.isAnswerCorrect = false;
         state.point -= 2;
+        state.wrongAnswer +=1
       }
   
     },
     removeResultMessageAfterSubmit(state,action) {
       state.showResultMessage = false;
     },
+    setIntialStateOnRestartQuiz(state) {
+      state.correctAnswer = 0;
+      state.wrongAnswer   = 0;
+      state.point = 0; 
+      state.showResultMessage = null;
+    }
   },
 });
 

@@ -1,42 +1,47 @@
 import React, { useEffect, useState } from "react";
-import {  useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import Button from "../../layout/Button";
 import Input from "../../layout/Input";
+import FinishBtn from "../FinishQuiz";
+import DisplayOption from "./DisplayOption";
 
 const QuestionOptionList = (props) => {
   const timer = useSelector((state) => state.timer.sec);
-  const setRandomOption = useSelector((state) => state.randomSelete.setRandomValue);
-  const [userSeleteOption, getUserSeleteOption] = useState("");
+  const getRandomOption = useSelector(
+    (state) => state.randomSelect.setRandomValue
+  );
+  const totalQuestionNumber = useSelector(
+    (state) => state.questionOption.questionNumber
+  );
+  const [userSelectOption, getUserSelectOption] = useState("");
   const [showNextQuestionBtn, setShowQuestionbtn] = useState(false);
   const [options] = props.questionOption;
 
   useEffect(() => {
-    if (timer === 1 && userSeleteOption === "") {
-      localStorage.setItem("blankSeleteOption", userSeleteOption);
+    if (timer === 1 && userSelectOption === "") {
+      localStorage.setItem("blankSelectOption", userSelectOption);
     }
-    if(setRandomOption!==''){
-      getUserSeleteOption(setRandomOption)
+    if (getRandomOption !== "") {
+      getUserSelectOption(getRandomOption);
     }
+  }, [timer, userSelectOption, getRandomOption]);
 
-  }, [timer, userSeleteOption,setRandomOption]);
-
-  const showUserSeleteOption = (event) => {
+  const showUserSelectOptionHandler = (value) => {
     if (props.btndisabled) {
-      const optionValue = event.target.textContent;
-      getUserSeleteOption(optionValue);
-      localStorage.setItem("blankSeleteOption" , optionValue)
+      const optionValue = value;
+      getUserSelectOption(optionValue);
+      localStorage.setItem("blankSelectOption", optionValue);
     }
   };
 
   const handlerSubmit = () => {
-
     setShowQuestionbtn(true);
-    props.onSubmit(userSeleteOption);
+    props.onSubmit(userSelectOption);
     props.onStopTimer("stop");
   };
 
   const getUserInput = (input) => {
-    getUserSeleteOption(input);
+    getUserSelectOption(input);
   };
 
   return (
@@ -45,16 +50,18 @@ const QuestionOptionList = (props) => {
         {options.length > 0 &&
           options.map((option, index) => {
             return (
-              <span
-                dangerouslySetInnerHTML={{ __html: option }}
-                onClick={showUserSeleteOption}
+              <DisplayOption
                 key={`option${index}`}
-              ></span>
+                option={option}
+                dangerouslySetInnerHTML={{ __html: option }}
+                onSelect={showUserSelectOptionHandler}
+                userSelectOption={userSelectOption}
+              />
             );
           })}
       </div>
       <div className="input">
-        <Input onChange={getUserInput} userSeleteOption={userSeleteOption} />
+        <Input onChange={getUserInput} userSeleteOption={userSelectOption} />
       </div>
       <div className="button">
         <Button onClick={handlerSubmit} disabled={!props.btndisabled}>
@@ -65,8 +72,9 @@ const QuestionOptionList = (props) => {
             Next Question
           </Button>
         )}
+        {totalQuestionNumber > 10 && <FinishBtn onFinish={props.onStopTimer} />}
       </div>
     </div>
   );
 };
-export default QuestionOptionList;
+export default React.memo(QuestionOptionList);

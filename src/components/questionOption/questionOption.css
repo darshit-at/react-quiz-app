@@ -1,10 +1,8 @@
 .option-control {
   display: flex;
-
   flex-direction: column;
-
   align-items: center;
-  flex-wrap: wrap;
+  justify-content: flex-start;
 }
 .upper-option,
 .lower-option {
@@ -15,10 +13,13 @@ display: flex;
 .input {
   margin: 14px 0px;
 }
+.option-block {
+  max-width: 300px;
+  display: flex;
+}
 span {
   cursor: pointer;
   margin: 4px;
-
   transition: all 0.24s ease-in-out;
   color: rgb(255, 255, 255);
   background: rgb(155, 131, 87);
@@ -31,6 +32,19 @@ span:hover {
   color: white;
 }
 
-.click-option {
+.Select-option {
   background-color: darkorange;
+}
+
+@media screen and (max-width:545px) {
+  .upper-option {
+    display: flex;
+    flex-direction: column;
+
+  }
+  span {
+    width: 200px;
+    text-align: center;
+    display: block;
+  }
 }
